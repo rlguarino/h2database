@@ -1579,6 +1579,16 @@ public class ErrorCode {
     public static final int VIEW_IS_INVALID_2 = 90109;
 
     /**
+     * The error with code <code>90110</code> is thrown when
+     * using the MEDIAN function with a data type that is not supported.
+     * Example:
+     * <pre>
+     * SELECT SUM('Hello') FROM DUAL;
+     * </pre>
+     */
+    public static final int MEDIAN_ON_WRONG_DATATYPE = 90110;
+
+    /**
      * The error with code <code>90111</code> is thrown when
      * an exception occurred while accessing a linked table.
      */
@@ -1923,7 +1933,7 @@ public class ErrorCode {
     public static final int STEP_SIZE_MUST_NOT_BE_ZERO = 90142;
 
 
-    // next are 90056, 90110, 90122, 90143
+    // next are 90056, 90122, 90143
 
     private ErrorCode() {
         // utility class

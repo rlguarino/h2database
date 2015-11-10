@@ -126,6 +126,11 @@ public class Aggregate extends Expression {
      */
     static final int HISTOGRAM = 16;
 
+    /**
+     * The aggregate type for MEDIAN(expression).
+     */
+    static final int MEDIAN = 17;
+
     private static final HashMap<String, Integer> AGGREGATES = New.hashMap();
 
     private final int type;
@@ -184,6 +189,7 @@ public class Aggregate extends Expression {
         addAggregate("HISTOGRAM", HISTOGRAM);
         addAggregate("BIT_OR", BIT_OR);
         addAggregate("BIT_AND", BIT_AND);
+        addAggregate("MEDIAN", MEDIAN);
     }
 
     private static void addAggregate(String name, int type) {
@@ -430,6 +436,12 @@ public class Aggregate extends Expression {
                 throw DbException.get(ErrorCode.SUM_OR_AVG_ON_WRONG_DATATYPE_1, getSQL());
             }
             break;
+        case MEDIAN:
+            if (!DataType.supportsAdd(dataType)){
+                throw DbException.get(ErrorCode.MEDIAN_ON_WRONG_DATATYPE, getSQL());
+            }
+            dataType = Value.DOUBLE;
+            break;
         case MIN:
         case MAX:
             break;
@@ -565,6 +577,9 @@ public class Aggregate extends Expression {
             break;
         case BIT_OR:
             text = "BIT_OR";
+            break;
+        case MEDIAN:
+            text = "MEDIAN";
             break;
         default:
             throw DbException.throwInternalError("type=" + type);

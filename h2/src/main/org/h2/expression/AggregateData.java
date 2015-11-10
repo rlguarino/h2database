@@ -30,6 +30,8 @@ abstract class AggregateData {
             return new AggregateDataCount();
         } else if (aggregateType == Aggregate.HISTOGRAM) {
             return new AggregateDataHistogram();
+        } else if (aggregateType == Aggregate.MEDIAN){
+            return new AggregateDataMedian();
         } else {
             return new AggregateDataDefault(aggregateType);
         }
