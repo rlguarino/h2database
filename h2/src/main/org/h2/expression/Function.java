@@ -102,7 +102,7 @@ public class Function extends Expression implements FunctionCall {
             SECOND = 114, WEEK = 115, YEAR = 116, CURRENT_DATE = 117,
             CURRENT_TIME = 118, CURRENT_TIMESTAMP = 119, EXTRACT = 120,
             FORMATDATETIME = 121, PARSEDATETIME = 122, ISO_YEAR = 123,
-            ISO_WEEK = 124, ISO_DAY_OF_WEEK = 125;
+            ISO_WEEK = 124, ISO_DAY_OF_WEEK = 125, PARSEDATE = 233;
 
     public static final int DATABASE = 150, USER = 151, CURRENT_USER = 152,
             IDENTITY = 153, SCOPE_IDENTITY = 154, AUTOCOMMIT = 155,
@@ -365,6 +365,8 @@ public class Function extends Expression implements FunctionCall {
                 VAR_ARGS, Value.STRING);
         addFunctionWithNull("PARSEDATETIME", PARSEDATETIME,
                 VAR_ARGS, Value.TIMESTAMP);
+        addFunctionWithNull("PARSEDATE", PARSEDATE,
+                VAR_ARGS, Value.DATE);
         addFunction("ISO_YEAR", ISO_YEAR,
                 1, Value.INT);
         addFunction("ISO_WEEK", ISO_WEEK,
@@ -1483,6 +1485,20 @@ public class Function extends Expression implements FunctionCall {
             }
             break;
         }
+        case PARSEDATE: {
+            if (v0 == ValueNull.INSTANCE || v1 == ValueNull.INSTANCE) {
+                result = ValueNull.INSTANCE;
+            } else {
+                String locale = v2 == null ?
+                        null : v2 == ValueNull.INSTANCE ? null : v2.getString();
+                String tz = v3 == null ?
+                        null : v3 == ValueNull.INSTANCE ? null : v3.getString();
+                java.util.Date d = DateTimeUtils.parseDateTime(
+                        v0.getString(), v1.getString(), locale, tz);
+                result = ValueDate.fromMillis(d.getTime());
+            }
+            break;
+        }
         case NULLIF:
             result = database.areEqual(v0, v1) ? ValueNull.INSTANCE : v0;
             break;
@@ -2155,6 +2171,7 @@ public class Function extends Expression implements FunctionCall {
             break;
         case FORMATDATETIME:
         case PARSEDATETIME:
+        case PARSEDATE:
             min = 2;
             max = 4;
             break;
